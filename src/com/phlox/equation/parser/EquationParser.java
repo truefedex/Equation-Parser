@@ -25,10 +25,26 @@ public final class EquationParser implements NestedEquationParseListener {
 				}
 			}
 			if (!found) {
-				throw new UnknownEntityException("Unknown entity at position: " + position);
+				throw new UnknownEntityException(String.format("Unknown entity at position: [%s:%d]", equationString, position));
 			}
 		}
-		
+		int maxPriority = 0;
+		for (EquationPart equationPart : parts) {
+			maxPriority = Math.max(maxPriority, equationPart.getOperatorPriority());
+		}
+		int priority = maxPriority;
+		while (priority >= 0) {
+			int i = 0;
+			while (i < parts.size()) {
+				EquationPart equationPart = parts.get(i);
+				if (equationPart.getOperatorPriority() != priority) {
+					continue;
+				}
+				if (i > 0) {
+
+				}
+			}
+		}
 		return null;
 	}
 
