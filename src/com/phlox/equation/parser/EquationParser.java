@@ -2,8 +2,6 @@ package com.phlox.equation.parser;
 
 import java.util.ArrayList;
 
-import sun.org.mozilla.javascript.internal.EvaluatorException;
-
 import com.phlox.equation.parser.EquationPartParser.NestedEquationParseListener;
 import com.phlox.equation.parser.EquationPartParser.ParseResult;
 import com.phlox.equation.parser.exceprion.UnknownEntityException;
