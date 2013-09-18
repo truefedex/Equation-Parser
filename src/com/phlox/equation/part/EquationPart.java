@@ -15,4 +15,12 @@ public abstract class EquationPart {
 	public int getOperatorPriority() {
 		return NO_OPERATOR;
 	}
+
+	public boolean setLeftOperand(EquationPart equationPart) {
+		return false;
+	}
+
+	public boolean setRightOperand(EquationPart equationPart) {
+		return false;
+	}
 }
