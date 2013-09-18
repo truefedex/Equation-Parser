@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import com.phlox.equation.parser.part.AdditionParser;
 import com.phlox.equation.parser.part.DigitParser;
+import com.phlox.equation.parser.part.SubstractionParser;
 
 public class EquationPartParsersLibrary {
 	private ArrayList<EquationPartParser> parsers = new ArrayList<EquationPartParser>();
@@ -16,6 +17,7 @@ public class EquationPartParsersLibrary {
 	private void addDefaultParsers() {
 		parsers.add(new DigitParser());
 		parsers.add(new AdditionParser());
+		parsers.add(new SubstractionParser());
 	}
 
 	public ArrayList<EquationPartParser> getParsers() {
