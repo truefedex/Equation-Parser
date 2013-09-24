@@ -13,8 +13,8 @@ public class Sample {
 	public static void main(String[] args) {
 		EquationParser parser = new EquationParser();
 		try {
-			EvaluableEntity parsedEquation = parser.parse("2+2+-3*2");
-			System.out.println("2+2+-3*2=" + parsedEquation.evaluate(new HashMap<String, Double>()));
+			EvaluableEntity parsedEquation = parser.parse("2+2+--3*2");
+			System.out.println("2+2+--3*2=" + parsedEquation.evaluate(new HashMap<String, Double>()));
 		} catch (UnknownEntityException e) {
 			e.printStackTrace();
 		} catch (EmptyEquationException e) {

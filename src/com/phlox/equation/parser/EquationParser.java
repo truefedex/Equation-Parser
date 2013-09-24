@@ -16,7 +16,7 @@ public final class EquationParser implements NestedEquationParseListener {
 			WrongSyntaxException {
 		ArrayList<EvaluableEntity> entities = applyParsers(equationString);
 
-		entities = collapseOperationsOperands(entities, findOperationsMaxPriority(entities));
+		collapseOperationsOperands(entities);
 		if (entities.size() == 0) {
 			throw new EmptyEquationException(String.format("Empty equation: \"%s\"", equationString));
 		} else if (entities.size() > 1) {
@@ -26,59 +26,52 @@ public final class EquationParser implements NestedEquationParseListener {
 		}
 	}
 
-	private ArrayList<EvaluableEntity> collapseOperationsOperands(ArrayList<EvaluableEntity> entities, int maxPriority)
+	private void collapseOperationsOperands(ArrayList<EvaluableEntity> entities)
 			throws WrongSyntaxException {
-		int priority = maxPriority;
-		while (priority >= 0) {
-			int i = 0;
-			while (i < entities.size()) {
-				if (entities.get(i) instanceof Operator) {
-					Operator entity = (Operator) entities.get(i);
-					if (entity.getOperatorPriority() == priority) {
-						if (i > 0) {
-							entity.setLeftOperand(entities.get(i - 1));
-							entities.remove(i - 1);
-							i--;
-						}
-						if (i < (entities.size() - 1)) {
-							EvaluableEntity operand = collapseNextOperand(entities, i + 1);
-							entity.setRightOperand(operand);
-							entities.remove(i + 1);
+		EvaluableEntity operatorForCollapse;
+		do {
+			operatorForCollapse = null;
+			int operatorIndex = -1;
+			int maxPriority = -1;
+			for (int i = 0; i < entities.size(); i++) {
+				EvaluableEntity entity = entities.get(i);
+				if (entity instanceof Operator && !entity.readyForEval()) {
+					Operator operator = (Operator) entity;
+					boolean leftOperand = false, rightOperand = false;
+					if (i > 0 && entities.get(i - 1).readyForEval()) {
+						leftOperand = true;
+					}
+					if (i < (entities.size() - 1) && entities.get(i + 1).readyForEval()) {
+						rightOperand = true;
+					}
+					if (operator.isAppropriateOperands(leftOperand, rightOperand)) {
+						int priority = operator.calcOperationPriority(leftOperand, rightOperand);
+						if (priority > maxPriority) {
+							operatorForCollapse = entity;
+							operatorIndex = i;
+							maxPriority = priority;
 						}
 					}
 				}
-				i++;
 			}
-			priority--;
-		}
-		return entities;
-	}
-
-	private EvaluableEntity collapseNextOperand(ArrayList<EvaluableEntity> entities, int position)
-			throws WrongSyntaxException {
-		EvaluableEntity entity = entities.get(position);
-		if (entity instanceof Operator) {
-			if (position < (entities.size() - 1)) {
-				Operator operator = (Operator) entity;
-				operator.setRightOperand(collapseNextOperand(entities, position + 1));
-				entities.remove(position + 1);
-				return entity;
-			} else {
-				throw new WrongSyntaxException("Missing an operand.");
+			if (operatorForCollapse != null) {
+				boolean isOperatorSuitable;
+				if (operatorIndex > 0 && entities.get(operatorIndex - 1).readyForEval()) {
+					isOperatorSuitable = ((Operator)operatorForCollapse).setLeftOperand(entities.get(operatorIndex - 1));
+					if (isOperatorSuitable) {
+						entities.remove(operatorIndex - 1);
+						operatorIndex--;
+					}
+				}
+				if (operatorIndex < (entities.size() - 1) && entities.get(operatorIndex + 1).readyForEval()) {
+					isOperatorSuitable = ((Operator)operatorForCollapse).setRightOperand(entities.get(operatorIndex + 1));
+					if (isOperatorSuitable) {
+						entities.remove(operatorIndex + 1);
+					}
+				}
 			}
-		} else {
-			return entities.get(position);
-		}
-	}
-
-	private int findOperationsMaxPriority(ArrayList<EvaluableEntity> entities) {
-		int maxPriority = 0;
-		for (EvaluableEntity entity : entities) {
-			if (entity instanceof Operator) {
-				maxPriority = Math.max(maxPriority, ((Operator) entity).getOperatorPriority());
-			}
-		}
-		return maxPriority;
+		} while (operatorForCollapse != null);
+		
 	}
 
 	private ArrayList<EvaluableEntity> applyParsers(String equationString) throws UnknownEntityException {

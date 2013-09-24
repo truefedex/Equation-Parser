@@ -10,7 +10,17 @@ public class Multiplication extends OperatorEntity {
 	}
 
 	@Override
-	public int getOperatorPriority() {
-		return 1;
+	public boolean isAppropriateOperands(boolean leftOperand, boolean rightOperand) {
+		return leftOperand && rightOperand;
+	}
+
+	@Override
+	public boolean readyForEval() {
+		return getLeftOperand() != null && getRightOperand() != null;
+	}
+
+	@Override
+	public int calcOperationPriority(boolean leftOperand, boolean rightOperand) {
+		return NORMAL_PRIORITY;
 	}
 }

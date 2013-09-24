@@ -15,4 +15,9 @@ public class Digit extends EvaluableEntity {
 		return value;
 	}
 
+	@Override
+	public boolean readyForEval() {
+		return true;
+	}
+
 }
