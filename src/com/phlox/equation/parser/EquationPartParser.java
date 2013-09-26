@@ -7,7 +7,7 @@ import com.phlox.equation.parser.exceprion.WrongSyntaxException;
 
 
 public abstract class EquationPartParser {
-	public abstract ParseResult tryParse(String equation, int fromPos, NestedEquationParseListener nestedListener);
+	public abstract ParseResult tryParse(String equation, int fromPos, NestedEquationParseListener nestedListener) throws UnknownEntityException, EmptyEquationException, WrongSyntaxException;
 	
 	public class ParseResult {
 		public EvaluableEntity object;

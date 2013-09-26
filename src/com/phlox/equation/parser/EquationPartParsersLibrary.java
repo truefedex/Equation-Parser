@@ -3,7 +3,9 @@ package com.phlox.equation.parser;
 import java.util.ArrayList;
 
 import com.phlox.equation.parser.part.AdditionParser;
+import com.phlox.equation.parser.part.BracketsParser;
 import com.phlox.equation.parser.part.DigitParser;
+import com.phlox.equation.parser.part.DivisionParser;
 import com.phlox.equation.parser.part.MultiplicationParser;
 import com.phlox.equation.parser.part.SubstractionParser;
 
@@ -22,6 +24,8 @@ public class EquationPartParsersLibrary {
 		parsers.add(new AdditionParser());
 		parsers.add(new SubstractionParser());
 		parsers.add(new MultiplicationParser());
+		parsers.add(new DivisionParser());
+		parsers.add(new BracketsParser());
 	}
 
 	public ArrayList<EquationPartParser> getParsers() {

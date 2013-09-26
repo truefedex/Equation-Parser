@@ -14,6 +14,7 @@ public final class EquationParser implements NestedEquationParseListener {
 
 	public EvaluableEntity parse(String equationString) throws UnknownEntityException, EmptyEquationException,
 			WrongSyntaxException {
+		equationString = equationString.replace(" ", "");
 		ArrayList<EvaluableEntity> entities = applyParsers(equationString);
 
 		collapseOperationsOperands(entities);
@@ -26,8 +27,7 @@ public final class EquationParser implements NestedEquationParseListener {
 		}
 	}
 
-	private void collapseOperationsOperands(ArrayList<EvaluableEntity> entities)
-			throws WrongSyntaxException {
+	private void collapseOperationsOperands(ArrayList<EvaluableEntity> entities) throws WrongSyntaxException {
 		EvaluableEntity operatorForCollapse;
 		do {
 			operatorForCollapse = null;
@@ -57,24 +57,27 @@ public final class EquationParser implements NestedEquationParseListener {
 			if (operatorForCollapse != null) {
 				boolean isOperatorSuitable;
 				if (operatorIndex > 0 && entities.get(operatorIndex - 1).readyForEval()) {
-					isOperatorSuitable = ((Operator)operatorForCollapse).setLeftOperand(entities.get(operatorIndex - 1));
+					isOperatorSuitable = ((Operator) operatorForCollapse).setLeftOperand(entities
+							.get(operatorIndex - 1));
 					if (isOperatorSuitable) {
 						entities.remove(operatorIndex - 1);
 						operatorIndex--;
 					}
 				}
 				if (operatorIndex < (entities.size() - 1) && entities.get(operatorIndex + 1).readyForEval()) {
-					isOperatorSuitable = ((Operator)operatorForCollapse).setRightOperand(entities.get(operatorIndex + 1));
+					isOperatorSuitable = ((Operator) operatorForCollapse).setRightOperand(entities
+							.get(operatorIndex + 1));
 					if (isOperatorSuitable) {
 						entities.remove(operatorIndex + 1);
 					}
 				}
 			}
 		} while (operatorForCollapse != null);
-		
+
 	}
 
-	private ArrayList<EvaluableEntity> applyParsers(String equationString) throws UnknownEntityException {
+	private ArrayList<EvaluableEntity> applyParsers(String equationString) throws UnknownEntityException,
+			EmptyEquationException, WrongSyntaxException {
 		EquationPartParsersLibrary library = new EquationPartParsersLibrary();
 		ArrayList<EvaluableEntity> entities = new ArrayList<EvaluableEntity>();
 		int position = 0;
