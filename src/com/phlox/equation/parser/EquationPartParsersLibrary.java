@@ -6,6 +6,7 @@ import com.phlox.equation.parser.part.AdditionParser;
 import com.phlox.equation.parser.part.BracketsParser;
 import com.phlox.equation.parser.part.DigitParser;
 import com.phlox.equation.parser.part.DivisionParser;
+import com.phlox.equation.parser.part.MaxParser;
 import com.phlox.equation.parser.part.MultiplicationParser;
 import com.phlox.equation.parser.part.SubstractionParser;
 
@@ -26,6 +27,7 @@ public class EquationPartParsersLibrary {
 		parsers.add(new MultiplicationParser());
 		parsers.add(new DivisionParser());
 		parsers.add(new BracketsParser());
+		parsers.add(new MaxParser());
 	}
 
 	public ArrayList<EquationPartParser> getParsers() {
